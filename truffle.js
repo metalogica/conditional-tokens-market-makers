@@ -1,73 +1,95 @@
-require("chai/register-should");
-require('mocha-steps')
+require("dotenv").config();
+const _ = require("lodash");
+const HDWalletProvider = require("@truffle/hdwallet-provider");
+
+const PRIVATE_KEY = process.env.TESTNET_BASE_SEPOLIA_PRIVATE_KEY;
+const INFURA_API_KEY = process.env.INFURA_API_KEY;
 
 const config = {
-    networks: {
-        mainnet: {
-            host: "localhost",
-            port: 8545,
-            network_id: "1",
-        },
-        ropsten: {
-            host: "localhost",
-            port: 8545,
-            network_id: "3",
-        },
-        kovan: {
-            host: "localhost",
-            port: 8545,
-            network_id: "42",
-        },
-        rinkeby: {
-            host: "localhost",
-            port: 8545,
-            network_id: "4",
-        },
-        goerli: {
-            host: "localhost",
-            port: 8545,
-            network_id: "5",
-        },
-        develop: {
-            host: "localhost",
-            port: 8545,
-            network_id: "*",
-	},
+  networks: {
+    baseSepolia: {
+      provider: () =>
+        new HDWalletProvider(PRIVATE_KEY, "https://sepolia.base.org"),
+      network_id: 84532,
+      confirmations: 2,
+      timeoutBlocks: 200,
+      skipDryRun: true,
+      gas: 4100000,
+      gasPrice: 8000000000, // 8 Gwei
     },
-    mocha: {
-        enableTimeouts: false,
-        grep: process.env.TEST_GREP,
-        reporter: "eth-gas-reporter",
-        reporterOptions: {
-            currency: "USD",
-            excludeContracts: ["Migrations"]
-        }
+    ethereumSepolia: {
+      provider: () =>
+        new HDWalletProvider(
+          PRIVATE_KEY,
+          `https://sepolia.infura.io/v3/${INFURA_API_KEY}`
+        ),
+      network_id: 11155111,
+      confirmations: 2,
+      timeoutBlocks: 200,
+      skipDryRun: true,
+      gas: 4000000,
+      gasPrice: 10000000000, // 10 Gwei
     },
-    compilers: {
-        solc: {
-            version: "0.5.10",
-            settings: {
-                optimizer: {
-                    enabled: true
-                }
-            }
-        }
-    }
-}
-
-const _ = require('lodash')
+    mainnet: {
+      host: "localhost",
+      port: 8545,
+      network_id: "1",
+    },
+    ropsten: {
+      host: "localhost",
+      port: 8545,
+      network_id: "3",
+    },
+    kovan: {
+      host: "localhost",
+      port: 8545,
+      network_id: "42",
+    },
+    rinkeby: {
+      host: "localhost",
+      port: 8545,
+      network_id: "4",
+    },
+    goerli: {
+      host: "localhost",
+      port: 8545,
+      network_id: "5",
+    },
+    develop: {
+      host: "localhost",
+      port: 8545,
+      network_id: "*",
+    },
+  },
+  mocha: {
+    enableTimeouts: false,
+    grep: process.env.TEST_GREP,
+    reporter: "eth-gas-reporter",
+    reporterOptions: {
+      currency: "USD",
+      excludeContracts: ["Migrations"],
+    },
+  },
+  compilers: {
+    solc: {
+      version: "0.5.10",
+      settings: {
+        optimizer: {
+          enabled: true,
+        },
+      },
+    },
+  },
+};
 
 try {
-    _.merge(config, require('./truffle-local'))
+  const localConfig = require("./truffle-local");
+  _.merge(config, localConfig);
+} catch (e) {
+  if (e.code === "MODULE_NOT_FOUND") {
+    console.log("No local truffle config found. Using all defaults...");
+  } else {
+    console.warn("Tried processing local config but got error:", e);
+  }
 }
-catch(e) {
-    if(e.code === 'MODULE_NOT_FOUND') {
-        // eslint-disable-next-line no-console
-        console.log('No local truffle config found. Using all defaults...')
-    } else {
-        // eslint-disable-next-line no-console
-        console.warn('Tried processing local config but got error:', e)
-    }
-}
-
-module.exports = config
+module.exports = config;
