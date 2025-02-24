@@ -13,7 +13,9 @@
     "extractnetinfo": "tnt eN",
     "resetnetinfo": "truffle networks --clean && tnt iN",
     "measuregasstats": "tnt measureGas -f inheritanceMap.json -o build/gas-stats.json --test-command 'npm test'",
-    "prepublishOnly": "eslint . && truffle compile && truffle networks --clean && tnt iN && tnt cleanBuild"
+    "prepublishOnly": "eslint . && truffle compile && truffle networks --clean && tnt iN && tnt cleanBuild",
+    "deploy:base-sepolia": "eslint . && truffle compile && truffle networks --clent && truffle migrate --network baseSepolia --reset",
+    "deploy:ethereum-sepolia": "eslint . && truffle compile && truffle networks --clent && truffle migrate --network ethereumSepolia --reset"
   },
   "keywords": [
     "Ethereum",
@@ -27,25 +29,26 @@
   "dependencies": {
     "@gnosis.pm/conditional-tokens-contracts": "^1.0.1",
     "@gnosis.pm/util-contracts": "^3.0.0-alpha.3",
-    "@truffle/hdwallet-provider": "^1.0.18",
     "canonical-weth": "^1.3.1",
+    "dotenv": "^16.4.7",
     "openzeppelin-solidity": "^2.3.0",
+    "solc": "0.5.10",
     "truffle-flattener": "^1.4.2"
   },
   "devDependencies": {
+    "@babel/eslint-parser": "^7.26.8",
     "@codechecks/client": "^0.1.9",
     "@gnosis.pm/truffle-nice-tools": "^1.1.3",
-    "babel-eslint": "^10.0.3",
-    "chai": "^4.2.0",
+    "@truffle/hdwallet-provider": "^2.1.15",
     "decimal.js": "^10.2.0",
-    "eslint": "^5.16.0",
+    "eslint": "^9.2.0",
     "eslint-plugin-babel": "^5.1.0",
     "eth-gas-reporter": "^0.2.11",
     "lodash": "^4.17.15",
     "mocha-steps": "^1.3.0",
     "openzeppelin-test-helpers": "^0.4.3",
     "truffle": "^5.0.36",
-    "truffle-hdwallet-provider": "^1.0.17"
+    "truffle-test-helpers": "^0.2.2"
   },
   "repository": {
     "type": "git",
