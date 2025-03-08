@@ -58,7 +58,7 @@ const config = {
     develop: {
       host: "localhost",
       port: 8545,
-      network_id: "*",
+      network_id: "31337",
     },
   },
   mocha: {
